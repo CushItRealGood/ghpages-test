@@ -40,4 +40,5 @@ jobs:
         git config --global user.name "${{ github.actor }}"
         git config --global user.email "${{ github.actor }}@users.noreply.github.com"
         git commit -m "Add artifact to repository"
+        git pull origin new-branch --allow-unrelated-histories
         git push origin new-branch
