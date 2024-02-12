@@ -41,5 +41,5 @@ jobs:
         git config --global user.email "${{ github.actor }}@users.noreply.github.com"
         git commit -m "Add artifact to repository"
         git config pull.ff only  # Prefer fast-forward merges
-        git pull origin new-branch
+        git pull origin new-branch --no-edit --allow-unrelated-histories
         git push origin new-branch
