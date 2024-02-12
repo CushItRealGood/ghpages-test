@@ -32,7 +32,7 @@
 
   <script>
     function fetchAndDisplayContents(path) {
-      fetch(`https://api.github.com/repos/<your-username>/<your-repo>/contents/${path}`)
+      fetch(`https://api.github.com/repos/CushItRealGood/ghpages-test/contents/${path}`)
         .then(response => response.json())
         .then(data => {
           const fileList = document.getElementById('file-list');
@@ -44,7 +44,7 @@
             link.textContent = item.name;
 
             if (item.type === 'file') {
-              link.href = `https://raw.githubusercontent.com/<your-username>/<your-repo>/main/${item.path}`;
+              link.href = `https://raw.githubusercontent.com/CushItRealGood/ghpages-test/main/${item.path}`;
               link.download = item.name;
             } else {
               link.onclick = () => fetchAndDisplayContents(item.path);
