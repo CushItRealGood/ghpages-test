@@ -37,7 +37,7 @@ jobs:
     - name: Move Artifact to gh-pages Directory
       run: |
         mkdir gh-pages
-        mv your-artifact-name gh-pages/
+        mv app-artifact.zip gh-pages/
         
     - name: Add Artifact to Repository
       run: |
