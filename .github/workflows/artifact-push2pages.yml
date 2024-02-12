@@ -19,12 +19,11 @@ jobs:
         ref: ${{ github.event.inputs.tag }}
         token: ${{ secrets.GHCR_TOKEN }}
 
-   # - name: Download Artifact
-   #   uses: actions/download-artifact@v2
-   #   with:
-   #     name: app-artifact.zip  # replace with your actual artifact name
-   #     path: .
-   #     tag: ${{ github.event.inputs.tag }}
+    - name: Create Branch
+      run: |
+        git branch new-branch
+        git checkout new-branch
+        
     - name: Download Artifact
       run: |
         tag=${{ github.event.inputs.tag }}
@@ -42,4 +41,4 @@ jobs:
         git config --global user.name "${{ github.actor }}"
         git config --global user.email "${{ github.actor }}@users.noreply.github.com"
         git commit -m "Add artifact to repository"
-        git push
+        git push origin new-branch
