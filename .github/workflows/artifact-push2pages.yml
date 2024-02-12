@@ -15,13 +15,22 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v2
 
+   # - name: Download Artifact
+   #   uses: actions/download-artifact@v2
+   #   with:
+   #     name: app-artifact.zip  # replace with your actual artifact name
+   #     path: .
+   #     tag: ${{ github.event.inputs.tag }}
     - name: Download Artifact
-      uses: actions/download-artifact@v2
-      with:
-        name: app-artifact.zip  # replace with your actual artifact name
-        path: .
-        tag: ${{ github.event.inputs.tag }}
-
+      run: |
+        tag=${{ github.event.inputs.tag }}
+        asset_id=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          "https://api.github.com/repos/${{ github.repository }}/releases/tags/$tag" \
+          | jq -r '.assets[] | select(.name == "app-artifact.zip").id')
+        echo "Downloading artifact with ID: $asset_id"
+        curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          -LJO "https://api.github.com/repos/${{ github.repository }}/releases/assets/$asset_id"
+          
     - name: Add Artifact to Repository
       run: |
         git add .
