@@ -14,6 +14,10 @@ jobs:
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v2
+      with:
+        repository: CushItRealGood/ghpages-test
+        ref: ${{ github.event.inputs.tag }}
+        token: ${{ secrets.GHCR_TOKEN }}
 
    # - name: Download Artifact
    #   uses: actions/download-artifact@v2
@@ -24,11 +28,11 @@ jobs:
     - name: Download Artifact
       run: |
         tag=${{ github.event.inputs.tag }}
-        asset_id=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+        asset_id=$(curl -s -H "Authorization: Bearer ${{ secrets.GHCR_TOKEN }}" \
           "https://api.github.com/repos/${{ github.repository }}/releases/tags/$tag" \
-          | jq -r '.assets[] | select(.name == "app-artifact.zip").id')
+          | jq -r '.assets[] | select(.name == "app-artifacts.zip").id')
         echo "Downloading artifact with ID: $asset_id"
-        curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+        curl -s -H "Authorization: Bearer ${{ secrets.GHCR_TOKEN }}" \
           -LJO "https://api.github.com/repos/${{ github.repository }}/releases/assets/$asset_id"
           
     - name: Add Artifact to Repository
