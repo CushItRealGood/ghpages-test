@@ -34,9 +34,14 @@ jobs:
         echo "Downloading artifact from URL: $asset_url"
         curl -sLJO -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "$asset_url"
 
+    - name: Move Artifact to gh-pages Directory
+      run: |
+        mkdir gh-pages
+        mv your-artifact-name gh-pages/
+        
     - name: Add Artifact to Repository
       run: |
-        git add .
+        git add gh-pages/
         git config --global user.name "${{ github.actor }}"
         git config --global user.email "${{ github.actor }}@users.noreply.github.com"
         git commit -m "Add artifact to repository"
