@@ -1,4 +1,4 @@
-name: Add Artifact to Repo
+name: Add Artifact number 2 to Repo
 
 on:
   workflow_dispatch:
