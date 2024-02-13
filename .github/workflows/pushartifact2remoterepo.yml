@@ -37,25 +37,11 @@ jobs:
       run: |
         mkdir -p gh-pages/${{ env.ARTIFACT_FOLDER }}/${{ github.event.inputs.tag }}/
         mv ${{ env.ARTIFACT_NAME }} gh-pages/${{ env.ARTIFACT_FOLDER }}/${{ github.event.inputs.tag }}/
-        
+
     - name: Push Artifact to Another Repo
-      uses: actions/github-script@v4
-      with:
-       script: |
-          const github = require('@actions/github');
-          const octokit = new github.GitHub(process.env.${{ secrets.GITHUB_TOKEN }});
-
-          const response = await octokit.repos.createOrUpdateFile({
-            owner: 'CushItRealGood',
-            repo: 'gha',
-            path: 'gh-pages/${{ env.ARTIFACT_NAME }}',
-            message: 'Add artifact to repository',
-            content: require('fs').readFileSync('gh-pages/${{ env.ARTIFACT_NAME }}').toString('base64'),
-            branch: 'main',
-            committer: {
-               name: 'GitHub Actions',
-              email: 'actions@github.com',
-            },
-          });
-
-          console.log(response.data);
+      run: |
+        curl -X PUT \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          -d '{"message":"Add artifact to repository","committer":{"name":"GitHub Actions","email":"actions@github.com"},"content":"'$(base64 -w 0 gh-pages/${{ env.ARTIFACT_NAME }})'"}' \
+          "https://api.github.com/repos/CushItRealGood/gha/contents/main/${{ env.ARTIFACT_NAME }}?ref=gh-pages"
