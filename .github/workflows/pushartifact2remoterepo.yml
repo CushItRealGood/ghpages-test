@@ -33,14 +33,34 @@ jobs:
         echo "Downloading artifact from URL: $asset_url"
         curl -sLJO -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "$asset_url"
 
-    - name: Push Artifact to Another Repo
+    - name: Clone external repository and switch to gh-pages branch
       run: |
-        mkdir -p gh-pages/${{ env.ARTIFACT_FOLDER }}/
-        cp ${{ env.ARTIFACT_NAME }} gh-pages/${{ env.ARTIFACT_FOLDER }}/
-        cd gh-pages/${{ env.ARTIFACT_FOLDER }}/
-        base64 -w 0 ${{ env.ARTIFACT_NAME }} > encoded_artifact.txt
-        curl -X PUT \
-          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-          -H "Accept: application/vnd.github.v3+json" \
-          -d '{"message":"Add artifact to repository","committer":{"name":"GitHub Actions","email":"actions@github.com"},"content":"'$(cat encoded_artifact.txt)'"}' \
-          "https://api.github.com/repos/CushItRealGood/gha/contents/main/${{ env.ARTIFACT_FOLDER }}/${{ env.ARTIFACT_NAME }}?ref=main"
+        git clone https://github.com/CushItRealGood/pages-external
+        cd pages-external
+        git checkout gh-pages
+
+    - name: Update Github Pages
+      working-directory: pages-external
+      run: |
+        export GITHUB_TOKEN=${{ secrets.GHCR_TOKEN }}
+        branch_name=${{ env.ARTIFACT_FOLDER }}
+    
+        # Create a new branch
+        git checkout -b $branch_name
+
+        # Copy files from the main repository (you might need to adjust the source directory)
+        cp -R ../gh-pages/. .
+
+        # Add changes to the new branch
+        git add .
+
+        # Configure git user info
+        git config user.name "cushitrealgood"
+        git config user.email "cushitrealgood@noreply.github.com"
+
+        # Commit changes with a meaningful message
+        git commit -m "Update from ref: $GITHUB_SHA"
+
+        # Push the changes to the external repository
+        git push origin $branch_name
+
