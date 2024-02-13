@@ -56,7 +56,7 @@ jobs:
         # Copy files from the repository (you might need to adjust the source directory)
         ls
         pwd
-        cp -R ${{ env.ARTIFACT_NAME }} .
+        cp -R ../${{ env.ARTIFACT_NAME }} .
 
         # Add changes to the new branch
         git add .
