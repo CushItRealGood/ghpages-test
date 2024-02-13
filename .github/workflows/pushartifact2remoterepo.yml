@@ -38,8 +38,6 @@ jobs:
         git clone https://github.com/CushItRealGood/pages-external
         cd pages-external
         git checkout gh-pages
-        ls
-        pwd
 
     - name: Update Github Pages
       working-directory: pages-external
@@ -54,9 +52,7 @@ jobs:
         git checkout gh-pages
 
         # Copy files from the repository (you might need to adjust the source directory)
-        ls
-        pwd
-        cp -R ../${{ env.ARTIFACT_NAME }} .
+        cp -R ${{ env.ARTIFACT_NAME }} ./${{ env.ARTIFACT_FOLDER }}/${{ github.event.inputs.tag }}/
 
         # Add changes to the new branch
         git add .
