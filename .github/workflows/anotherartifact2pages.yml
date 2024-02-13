@@ -35,7 +35,7 @@ jobs:
 
     - name: Move Artifact to gh-pages Directory
       run: |
-        mkdir -p gh-pages/app2/${{ github.event.inputs.tag }}/
+        mkdir -p gh-pages/${{ env.ARTIFACT_FOLDER }}/${{ github.event.inputs.tag }}/
         mv ${{ env.ARTIFACT_NAME }} gh-pages/${{ env.ARTIFACT_FOLDER }}/${{ github.event.inputs.tag }}/
         
     - name: Add Artifact to Repository
