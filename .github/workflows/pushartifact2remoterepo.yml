@@ -44,7 +44,11 @@ jobs:
       run: |
         export GITHUB_TOKEN=${{ secrets.GHCR_TOKEN }}
         branch_name=${{ env.ARTIFACT_FOLDER }}
-    
+      
+        # Set up Git credentials
+        git config credential.helper "store --file=.git/credentials"
+        echo "https://github.com:${GITHUB_TOKEN}@github.com" > .git/credentials
+
         # Create a new branch
         git checkout -b $branch_name
 
