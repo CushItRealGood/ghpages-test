@@ -40,7 +40,7 @@ jobs:
 
     - name: Push Artifact to Another Repo
       run: |
-        mkdir -p gh-pages
+        mkdir -p gh-pages/${{ env.ARTIFACT_FOLDER }}/
         cp ${{ env.ARTIFACT_FOLDER }}/${{ env.ARTIFACT_NAME }} gh-pages/
         curl -X PUT \
           -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
