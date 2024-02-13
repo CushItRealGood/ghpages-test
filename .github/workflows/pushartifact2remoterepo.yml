@@ -1,0 +1,63 @@
+name: Add Artifact number 2 to Repo
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag'
+        required: true
+
+env:
+  ARTIFACT_NAME: 'another-artifact.zip'
+  ARTIFACT_FOLDER: 'appfolder'
+  
+jobs:
+  download-artifact:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+      with:
+        repository: CushItRealGood/ghpages-test
+        ref: main
+        token: ${{ secrets.GHCR_TOKEN }}
+        
+    - name: Download Artifact
+      run: |
+        tag=${{ github.event.inputs.tag }}
+        response=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          "https://api.github.com/repos/${{ github.repository }}/releases/tags/$tag")
+        echo "GitHub API response: $response"
+        asset_url=$(echo "$response" | jq -r '.assets[] | select(.name == "${{ env.ARTIFACT_NAME }}").browser_download_url')
+        echo "Downloading artifact from URL: $asset_url"
+        curl -sLJO -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "$asset_url"
+
+    - name: Move Artifact to gh-pages Directory
+      run: |
+        mkdir -p gh-pages/${{ env.ARTIFACT_FOLDER }}/${{ github.event.inputs.tag }}/
+        mv ${{ env.ARTIFACT_NAME }} gh-pages/${{ env.ARTIFACT_FOLDER }}/${{ github.event.inputs.tag }}/
+        
+    - name: Push Artifact to Another Repo
+       uses: actions/github-script@v4
+       with:
+        script: |
+          const github = require('@actions/github');
+          const octokit = new github.GitHub(process.env.GITHUB_TOKEN);
+
+          const response = await octokit.repos.createOrUpdateFile({
+            owner: 'CushItRealGood',
+            repo: 'gha',
+            path: 'gh-pages/${{ env.ARTIFACT_NAME }}',
+            message: 'Add artifact to repository',
+            content: require('fs').readFileSync('gh-pages/${{ env.ARTIFACT_NAME }}').toString('base64'),
+            branch: 'main',
+            committer: {
+               name: 'GitHub Actions',
+              email: 'actions@github.com',
+            },
+          });
+
+         console.log(response.data);
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
