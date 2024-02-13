@@ -37,8 +37,10 @@ jobs:
       run: |
         mkdir -p gh-pages/${{ env.ARTIFACT_FOLDER }}/
         cp ${{ env.ARTIFACT_NAME }} gh-pages/${{ env.ARTIFACT_FOLDER }}/
+        cd gh-pages/${{ env.ARTIFACT_FOLDER }}/
+        base64 -w 0 ${{ env.ARTIFACT_NAME }} > encoded_artifact.txt
         curl -X PUT \
           -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
           -H "Accept: application/vnd.github.v3+json" \
-          -d '{"message":"Add artifact to repository","committer":{"name":"GitHub Actions","email":"actions@github.com"},"content":"'$(base64 -w 0 gh-pages/${{ env.ARTIFACT_FOLDER }}/${{ env.ARTIFACT_NAME }})'"}' \
-          "https://api.github.com/repos/CushItRealGood/gha/contents/main/${{ env.ARTIFACT_NAME }}?ref=gh-pages"
+          -d '{"message":"Add artifact to repository","committer":{"name":"GitHub Actions","email":"actions@github.com"},"content":"'$(cat encoded_artifact.txt)'"}' \
+          "https://api.github.com/repos/CushItRealGood/gha/contents/main/${{ env.ARTIFACT_FOLDER }}/${{ env.ARTIFACT_NAME }}?ref=gh-pages"
