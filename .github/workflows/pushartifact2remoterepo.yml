@@ -43,17 +43,16 @@ jobs:
       working-directory: pages-external
       run: |
         export GITHUB_TOKEN=${{ secrets.GHCR_TOKEN }}
-        branch_name=${{ env.ARTIFACT_FOLDER }}
       
         # Set up Git credentials
         git config credential.helper "store --file=.git/credentials"
         echo "https://github.com:${GITHUB_TOKEN}@github.com" > .git/credentials
 
         # Create a new branch
-        git checkout -b $branch_name
+        git checkout -b gh-pages
 
-        # Copy files from the main repository (you might need to adjust the source directory)
-        cp -R ../gh-pages/. .
+        # Copy files from the repository (you might need to adjust the source directory)
+        cp -R ${{ env.ARTIFACT_NAME }} .
 
         # Add changes to the new branch
         git add .
@@ -66,5 +65,5 @@ jobs:
         git commit -m "Update from ref: $GITHUB_SHA"
 
         # Push the changes to the external repository
-        git push origin $branch_name
+        git push origin gh-pages
 
