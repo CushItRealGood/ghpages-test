@@ -43,4 +43,4 @@ jobs:
           -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
           -H "Accept: application/vnd.github.v3+json" \
           -d '{"message":"Add artifact to repository","committer":{"name":"GitHub Actions","email":"actions@github.com"},"content":"'$(cat encoded_artifact.txt)'"}' \
-          "https://api.github.com/repos/CushItRealGood/gha/contents/main/${{ env.ARTIFACT_FOLDER }}/${{ env.ARTIFACT_NAME }}?ref=gh-pages"
+          "https://api.github.com/repos/CushItRealGood/gha/contents/main/${{ env.ARTIFACT_FOLDER }}/${{ env.ARTIFACT_NAME }}?ref=main"
