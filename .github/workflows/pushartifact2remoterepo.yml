@@ -45,5 +45,5 @@ jobs:
         curl -X PUT \
           -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
           -H "Accept: application/vnd.github.v3+json" \
-          -d '{"message":"Add artifact to repository","committer":{"name":"GitHub Actions","email":"actions@github.com"},"content":"'$(base64 -w 0 gh-pages/${{ env.ARTIFACT_NAME }})'"}' \
+          -d '{"message":"Add artifact to repository","committer":{"name":"GitHub Actions","email":"actions@github.com"},"content":"'$(base64 -w 0 gh-pages/${{ env.ARTIFACT_FOLDER }}/${{ env.ARTIFACT_NAME }})'"}' \
           "https://api.github.com/repos/CushItRealGood/gha/contents/main/${{ env.ARTIFACT_NAME }}?ref=gh-pages"
