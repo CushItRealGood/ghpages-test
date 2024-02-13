@@ -49,7 +49,7 @@ jobs:
         echo "https://github.com:${GITHUB_TOKEN}@github.com" > .git/credentials
 
         # Create a new branch
-        git checkout -b gh-pages
+        git checkout gh-pages
 
         # Copy files from the repository (you might need to adjust the source directory)
         cp -R ${{ env.ARTIFACT_NAME }} .
