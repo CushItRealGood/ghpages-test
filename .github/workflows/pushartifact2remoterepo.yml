@@ -52,8 +52,8 @@ jobs:
         git checkout gh-pages
 
         # Copy files from the repository (you might need to adjust the source directory)
-        mkdir -p ${{ env.ARTIFACT_FOLDER }}/${{ github.event.inputs.tag }}/
-        cp -R ${{ env.ARTIFACT_NAME }} ./${{ env.ARTIFACT_FOLDER }}/${{ github.event.inputs.tag }}/
+        mkdir -p artifacts/${{ env.ARTIFACT_FOLDER }}/${{ github.event.inputs.tag }}/
+        cp -R ${{ env.ARTIFACT_NAME }} ./artifacts/${{ env.ARTIFACT_FOLDER }}/${{ github.event.inputs.tag }}/
 
         # Add changes to the new branch
         git add .
