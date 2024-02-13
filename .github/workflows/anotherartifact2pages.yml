@@ -37,7 +37,7 @@ jobs:
     - name: Move Artifact to gh-pages Directory
       run: |
         mkdir -p gh-pages/app2/${{ github.event.inputs.tag }}/
-        mv app-artifact.zip gh-pages/app2/${{ github.event.inputs.tag }}/
+        mv another-artifact.zip gh-pages/app2/${{ github.event.inputs.tag }}/
         
     - name: Add Artifact to Repository
       run: |
