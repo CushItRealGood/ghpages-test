@@ -39,11 +39,11 @@ jobs:
         mv ${{ env.ARTIFACT_NAME }} gh-pages/${{ env.ARTIFACT_FOLDER }}/${{ github.event.inputs.tag }}/
         
     - name: Push Artifact to Another Repo
-       uses: actions/github-script@v4
-       with:
-        script: |
+      uses: actions/github-script@v4
+      with:
+      script: |
           const github = require('@actions/github');
-          const octokit = new github.GitHub(process.env.GITHUB_TOKEN);
+          const octokit = new github.GitHub(process.env.${{ secrets.GITHUB_TOKEN }});
 
           const response = await octokit.repos.createOrUpdateFile({
             owner: 'CushItRealGood',
@@ -58,6 +58,4 @@ jobs:
             },
           });
 
-         console.log(response.data);
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          console.log(response.data);
