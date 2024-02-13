@@ -1,4 +1,4 @@
-name: Add Artifact number 2 to Repo
+name: Add Artifact to Github Pages Branch to make Public
 
 on:
   workflow_dispatch:
